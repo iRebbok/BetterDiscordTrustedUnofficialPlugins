@@ -64,7 +64,7 @@ class NoDeleteMessages {
     return 'Prevents the client from removing deleted messages and print edited messages (until restart).\nUse .NoDeleteMessages-deleted-message .markup to edit the CSS of deleted messages (and .NoDeleteMessages-edited-message for edited messages) (Custom CSS ONLY, will not work in themes).\n\nMy Discord server: https://join-nebula.surge.sh\nCreate an issue at https://github.com/Mega-Mewthree/BetterDiscordPlugins for support.';
   }
   getVersion() {
-    return "0.2.16";
+    return "0.2.17";
   }
   getAuthor() {
     return "Mega_Mewthree (original), ShiiroSan (edit logging)";
@@ -113,8 +113,8 @@ class NoDeleteMessages {
       that[symbols.replaceCustomCSS]();
     };
 
-    BdApi.injectCSS(this[symbols.CSSID], `
-      [${this[symbols.deletedMessageAttribute]}] .da-markup 
+   BdApi.injectCSS(this[symbols.CSSID], `
+      [${this[symbols.deletedMessageAttribute]}] .da-markup, [${this[symbols.deletedMessageAttribute]}] .da-markupRtl
       {
         color: #F00 !important;
       }
@@ -130,12 +130,14 @@ class NoDeleteMessages {
       }
 
       [${this[symbols.editedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}]:not(:last-child) > [class ^= markup],
-      :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}]
+      :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}], [${this[symbols.editedMessageAttribute]}] .da-markupRtl
       {
         color: rgba(255, 255, 255, 0.5) !important;
       }
 
-      [${this[symbols.deletedMessageAttribute]}] :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}]:not(:last-child) > [class^=markup], [${this[symbols.deletedMessageAttribute]}] :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}][class^=markup]
+      [${this[symbols.deletedMessageAttribute]}] :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}]:not(:last-child) > [class^=markup],
+      [${this[symbols.deletedMessageAttribute]}] :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}][class^=markup],
+      [${this[symbols.deletedMessageAttribute]}] :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}] .da-markupRtl
       {
         color: rgba(240, 71, 71, 0.5) !important;
       }
@@ -145,7 +147,7 @@ class NoDeleteMessages {
         color: #F00 !important;
       }
     `);
-
+    
     BdApi.injectCSS(this[symbols.customCSSID], this[symbols.settings].customCSS.replace(/<DELETED_MESSAGE>/g, `[${this[symbols.deletedMessageAttribute]}]`));
 
     ZeresPluginLibrary.Patcher.instead(this.getName(), ZeresPluginLibrary.WebpackModules.find(m => m.dispatch), "dispatch", (thisObject, args, originalFunction) => {
