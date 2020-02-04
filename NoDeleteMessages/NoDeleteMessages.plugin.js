@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-// Updated Nov 4th, 2019.
+// Updated Feb 4th, 2020.
 
 const symbols = {};
 
@@ -78,8 +78,8 @@ class NoDeleteMessages {
     this[symbols.editedMessageAttribute] = `data-${this[symbols.generateRandomString](32)}`;
     this[symbols.settings] = {};
   }
-  load() { }
-  unload() { }
+  load() {}
+  unload() {}
   start() {
     //TODO: Patch this
     if (!global.ZeresPluginLibrary) return window.BdApi.alert("Library Missing", `The library plugin needed for ${this.getName()} is missing.\n\nPlease download ZeresPluginLibrary here: https://betterdiscord.net/ghdl?id=2252`);
@@ -111,7 +111,7 @@ class NoDeleteMessages {
       that[symbols.replaceCustomCSS]();
     };
 
-   BdApi.injectCSS(this[symbols.CSSID], `
+    BdApi.injectCSS(this[symbols.CSSID], `
       [${this[symbols.deletedMessageAttribute]}] .da-markup, [${this[symbols.deletedMessageAttribute]}] .da-markupRtl
       {
         color: #F00 !important;
@@ -127,17 +127,16 @@ class NoDeleteMessages {
         transform-origin: top left;
       }
 
+      [${this[symbols.editedMessageAttribute]}][${this[symbols.deletedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}]:not(:last-child) > [class^=markup],
+      [${this[symbols.deletedMessageAttribute]}][${this[symbols.editedMessageAttribute]}].da-markupRtl
+      {
+        color: rgba(240, 71, 71, 0.5) !important;
+      }
+
       [${this[symbols.editedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}]:not(:last-child) > [class ^= markup],
       :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}], [${this[symbols.editedMessageAttribute]}] .da-markupRtl
       {
         color: rgba(255, 255, 255, 0.5) !important;
-      }
-
-      [${this[symbols.deletedMessageAttribute]}] :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}]:not(:last-child) > [class^=markup],
-      [${this[symbols.deletedMessageAttribute]}] :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}][class^=markup],
-      [${this[symbols.deletedMessageAttribute]}] :not([${this[symbols.editedMessageAttribute]}]) > [${this[symbols.editedMessageAttribute]}] .da-markupRtl
-      {
-        color: rgba(240, 71, 71, 0.5) !important;
       }
 
       [${this[symbols.deletedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}]:last-child > [class^=markup] 
@@ -145,7 +144,7 @@ class NoDeleteMessages {
         color: #F00 !important;
       }
     `);
-    
+
     BdApi.injectCSS(this[symbols.customCSSID], this[symbols.settings].customCSS.replace(/<DELETED_MESSAGE>/g, `[${this[symbols.deletedMessageAttribute]}]`));
 
     ZeresPluginLibrary.Patcher.instead(this.getName(), ZeresPluginLibrary.WebpackModules.find(m => m.dispatch), "dispatch", (thisObject, args, originalFunction) => {
@@ -168,159 +167,153 @@ class NoDeleteMessages {
     this.initialized = true;
   }
   stop() {
-    this[symbols.deletedMessages] = {};
-    this[symbols.editedMessages] = {};
-    Core.prototype.initSettings = this.oldCoreInitSettings;
-    V2C_CssEditorDetached.prototype.updateCss = this.oldDetachedEditorUpdate;
-    V2C_CssEditor.prototype.updateCss = this.oldEditorUpdate;
-    this[symbols.resetCustomCSS]();
-    BdApi.clearCSS(this[symbols.CSSID]);
-    BdApi.clearCSS(this[symbols.customCSSID]);
-    ZeresPluginLibrary.Patcher.unpatchAll(this.getName());
-  }
-  [symbols.generateRandomString](length) {
-    let text = "";
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (let i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
+      this[symbols.deletedMessages] = {};
+      this[symbols.editedMessages] = {};
+      Core.prototype.initSettings = this.oldCoreInitSettings;
+      V2C_CssEditorDetached.prototype.updateCss = this.oldDetachedEditorUpdate;
+      V2C_CssEditor.prototype.updateCss = this.oldEditorUpdate;
+      this[symbols.resetCustomCSS]();
+      BdApi.clearCSS(this[symbols.CSSID]);
+      BdApi.clearCSS(this[symbols.customCSSID]);
+      ZeresPluginLibrary.Patcher.unpatchAll(this.getName());
     }
-    return text;
-  }
-  [symbols.replaceCustomCSS]() {
-    const customCSS = document.getElementById("customcss");
-    if (customCSS) {
-      customCSS.innerHTML = customCSS.innerHTML.replace(/\.NoDeleteMessages\-deleted\-message/g, `[${this[symbols.deletedMessageAttribute]}]`).replace(/\.NoDeleteMessages\-edited\-message/g, `[${this[symbols.editedMessageAttribute]}]`);
+    [symbols.generateRandomString](length) {
+      let text = "";
+      const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      for (let i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+      return text;
     }
-  }
-  [symbols.resetCustomCSS]() {
-    const customCSS = document.getElementById("customcss");
-    if (customCSS) {
-      customCSS.innerHTML = customCSS.innerHTML.split(`[${this[symbols.deletedMessageAttribute]}]`).join(".NoDeleteMessages-deleted-message").split(`[${this[symbols.editedMessageAttribute]}]`).join(".NoDeleteMessages-edited-message");
+    [symbols.replaceCustomCSS]() {
+      const customCSS = document.getElementById("customcss");
+      if (customCSS) {
+        customCSS.innerHTML = customCSS.innerHTML.replace(/\.NoDeleteMessages\-deleted\-message/g, `[${this[symbols.deletedMessageAttribute]}]`).replace(/\.NoDeleteMessages\-edited\-message/g, `[${this[symbols.editedMessageAttribute]}]`);
+      }
     }
-  }
-  [symbols.filter](evt) {
-    if (evt.type === "MESSAGE_DELETE") {
-      if (Array.isArray(this[symbols.deletedMessages][evt.channelId])) {
-        if (this[symbols.deletedMessages][evt.channelId].length > 149) this[symbols.deletedMessages][evt.channelId].shift(); // 150 because only 150 messages are stored per channel.
-        this[symbols.deletedMessages][evt.channelId].push(evt.id);
-      } else {
-        this[symbols.deletedMessages][evt.channelId] = [evt.id];
+    [symbols.resetCustomCSS]() {
+      const customCSS = document.getElementById("customcss");
+      if (customCSS) {
+        customCSS.innerHTML = customCSS.innerHTML.split(`[${this[symbols.deletedMessageAttribute]}]`).join(".NoDeleteMessages-deleted-message").split(`[${this[symbols.editedMessageAttribute]}]`).join(".NoDeleteMessages-edited-message");
       }
-      if (evt.channelId === this[symbols.getCurrentChannelID]()) this[symbols.updateDeletedMessages]();
-      return true;
-    } else if (evt.type === "MESSAGE_DELETE_BULK") {
-      if (Array.isArray(this[symbols.deletedMessages][evt.channelId])) {
-        if (this[symbols.deletedMessages][evt.channelId].length + evt.ids.length > 149) this[symbols.deletedMessages][evt.channelId].splice(0, this[symbols.deletedMessages][evt.channelId].length + evt.ids.length - 150);
-        this[symbols.deletedMessages][evt.channelId].push(...evt.ids);
-      } else {
-        this[symbols.deletedMessages][evt.channelId] = [...evt.ids];
-      }
-      if (evt.channelId === this[symbols.getCurrentChannelID]()) this[symbols.updateDeletedMessages]();
-      return true;
-    } else if (evt.type === "MESSAGE_UPDATE" && evt.message.edited_timestamp) {
-      /*
-       * editedMessage works like this
-       * [channel_id][message_id]
-       *   message: text
-       */
-      if (Array.isArray(this[symbols.editedMessages][evt.message.channel_id])) {
-        if (this[symbols.editedMessages][evt.message.channel_id].length > 149) this[symbols.editedMessages][evt.message.id].shift();
-      }
-      if (!this[symbols.editedMessages][evt.message.channel_id]) {
-        this[symbols.editedMessages][evt.message.channel_id] = [evt.message.id];
-        this[symbols.editedMessages][evt.message.channel_id][evt.message.id] = [{
-          message: evt.message.content,
-          dateTime: new Date().toISOString()
-        }];
-      } else if (!this[symbols.editedMessages][evt.message.channel_id][evt.message.id]) {
-        this[symbols.editedMessages][evt.message.channel_id][evt.message.id] = [{
-          message: evt.message.content,
-          dateTime: new Date().toISOString()
-        }];
-      } else {
-        if (this[symbols.editedMessages][evt.message.channel_id][evt.message.id].length > 49) {
-          this[symbols.editedMessages][evt.message.channel_id][evt.message.id].shift() //I think 50 edits is enough no?
+    }
+    [symbols.filter](evt) {
+      if (evt.type === "MESSAGE_DELETE") {
+        if (Array.isArray(this[symbols.deletedMessages][evt.channelId])) {
+          if (this[symbols.deletedMessages][evt.channelId].length > 149) this[symbols.deletedMessages][evt.channelId].shift(); // 150 because only 150 messages are stored per channel.
+          this[symbols.deletedMessages][evt.channelId].push(evt.id);
+        } else {
+          this[symbols.deletedMessages][evt.channelId] = [evt.id];
         }
-        this[symbols.editedMessages][evt.message.channel_id][evt.message.id].push({
-          message: evt.message.content,
-          dateTime: new Date().toISOString()
-        });
-      }
-      if (evt.message.channel_id === this[symbols.getCurrentChannelID]()) this[symbols.updateEditedMessages]();
-      return true;
-    }
-    return false;
-  }
-  observer({
-    addedNodes
-  }) {
-    let len = addedNodes.length;
-    let change;
-    while (len--) {
-      change = addedNodes[len];
-      if (change.classList && (change.classList.contains("da-chatContent") || change.classList.contains("da-messagesWrapper") || change.classList.contains("da-chat")) || change.firstChild && change.firstChild.classList && change.firstChild.classList.contains("da-message")) {
-        this[symbols.updateDeletedMessages]();
-        this[symbols.updateEditedMessages]();
-        break;
-      }
-    }
-  }
-  [symbols.updateDeletedMessages]() {
-    const channelDeletedMessages = this[symbols.deletedMessages][this[symbols.getCurrentChannelID]()];
-    if (!channelDeletedMessages) return;
-    $(".da-content").each((index, elem) => {
-      try {
-        const messageID = ZeresPluginLibrary.ReactTools.getOwnerInstance(elem).props.message.id;
-        if (channelDeletedMessages.includes(messageID)) {
-          elem.setAttribute(this[symbols.deletedMessageAttribute], "");
-          for (let index = 0; index < elem.children.length; index++) {
-            elem.children[index].setAttribute(this[symbols.deletedMessageAttribute], "");
+        if (evt.channelId === this[symbols.getCurrentChannelID]()) this[symbols.updateMessages]();
+        return true;
+      } else if (evt.type === "MESSAGE_DELETE_BULK") {
+        if (Array.isArray(this[symbols.deletedMessages][evt.channelId])) {
+          if (this[symbols.deletedMessages][evt.channelId].length + evt.ids.length > 149) this[symbols.deletedMessages][evt.channelId].splice(0, this[symbols.deletedMessages][evt.channelId].length + evt.ids.length - 150);
+          this[symbols.deletedMessages][evt.channelId].push(...evt.ids);
+        } else {
+          this[symbols.deletedMessages][evt.channelId] = [...evt.ids];
+        }
+        if (evt.channelId === this[symbols.getCurrentChannelID]()) this[symbols.updateMessages]();
+        return true;
+      } else if (evt.type === "MESSAGE_UPDATE" && evt.message.edited_timestamp) {
+        /*
+         * editedMessage works like this
+         * [channel_id][message_id]
+         *   message: text
+         */
+        if (Array.isArray(this[symbols.editedMessages][evt.message.channel_id])) {
+          if (this[symbols.editedMessages][evt.message.channel_id].length > 149) this[symbols.editedMessages][evt.message.id].shift();
+        }
+        if (!this[symbols.editedMessages][evt.message.channel_id]) {
+          this[symbols.editedMessages][evt.message.channel_id] = [evt.message.id];
+          this[symbols.editedMessages][evt.message.channel_id][evt.message.id] = [{
+            message: evt.message.content,
+            dateTime: new Date().toISOString()
+          }];
+        } else if (!this[symbols.editedMessages][evt.message.channel_id][evt.message.id]) {
+          this[symbols.editedMessages][evt.message.channel_id][evt.message.id] = [{
+            message: evt.message.content,
+            dateTime: new Date().toISOString()
+          }];
+        } else {
+          if (this[symbols.editedMessages][evt.message.channel_id][evt.message.id].length > 49) {
+            this[symbols.editedMessages][evt.message.channel_id][evt.message.id].shift() //I think 50 edits is enough no?
           }
+          this[symbols.editedMessages][evt.message.channel_id][evt.message.id].push({
+            message: evt.message.content,
+            dateTime: new Date().toISOString()
+          });
         }
-      } catch (e) { }
-    });
-  }
-
-  [symbols.updateEditedMessages]() {
-    const channelEditedMessages = this[symbols.editedMessages][this[symbols.getCurrentChannelID]()];
-    if (!channelEditedMessages) return;
-    $(".da-markup").each((index, elem) => {
-      try {
-        const markupClassName = this[symbols.findModule]("markup")["markup"].split(" ")[0];
-        while (elem.getElementsByClassName(markupClassName).length)
-          elem.getElementsByClassName(markupClassName)[0].remove();
-        const messageID = ZeresPluginLibrary.ReactTools.getOwnerInstance(elem).props.message.id;
-        if (channelEditedMessages[messageID]) {
-          elem.setAttribute(this[symbols.editedMessageAttribute], "");
-          const edited = this[symbols.editedMessages][this[symbols.getCurrentChannelID]()][messageID];
-          const editedClassName = this[symbols.findModule]("edited")["edited"].split(" ")[0];
-          for (let i = 0; i < edited.length; i++) {
-            const elementEdited = this[symbols.showEdited](edited[i].message);
-
-            var timeElement = null;
-            for (let i = 0; i < elementEdited.children[0].children.length; i++) {
-              if (elementEdited.children[0].children[i].tagName.toLowerCase() === 'time') {
-                timeElement = elementEdited.children[0].children[i];
+        if (evt.message.channel_id === this[symbols.getCurrentChannelID]()) this[symbols.updateMessages]();
+        return true;
+      }
+      return false;
+    }
+  observer({
+      addedNodes
+    }) {
+      let len = addedNodes.length;
+      let change;
+      while (len--) {
+        change = addedNodes[len];
+        if (change.classList && (change.classList.contains("da-chatContent") || change.classList.contains("da-messagesWrapper") || change.classList.contains("da-chat")) || change.firstChild && change.firstChild.classList && change.firstChild.classList.contains("da-message")) {
+          this[symbols.updateMessages]();
+          break;
+        }
+      }
+    }
+    [symbols.updateMessages]() {
+      const channelDeletedMessages = this[symbols.deletedMessages][this[symbols.getCurrentChannelID]()];
+      const channelEditedMessages = this[symbols.editedMessages][this[symbols.getCurrentChannelID]()];
+      if (!channelEditedMessages && !channelDeletedMessages) return;
+      $(".da-message").each((index, elem) => {
+        try {
+          const messageID = ZeresPluginLibrary.ReactTools.getOwnerInstance(elem.querySelector(".da-container")).props.message.id;
+          if (channelDeletedMessages) {
+            if (channelDeletedMessages.includes(messageID)) {
+              elem.setAttribute(this[symbols.deletedMessageAttribute], "");
+              for (let index = 0; index < elem.children.length; index++) {
+                elem.children[index].setAttribute(this[symbols.deletedMessageAttribute], "");
               }
             }
-            var actualDate = new Date();
-            var messageEditDate = new Date(edited[i].dateTime);
-            var timeEdit = "";
-            if (actualDate.toLocaleDateString() == messageEditDate.toLocaleDateString()) {
-              timeEdit += "Today at"
-            } else {
-              timeEdit += messageEditDate.toLocaleDateString();
-            }
-            timeEdit += " " + messageEditDate.toLocaleTimeString();
-            new ZeresPluginLibrary.EmulatedTooltip(timeElement, timeEdit);
-
-            elementEdited.setAttribute(this[symbols.editedMessageAttribute], "");
-            elem.appendChild(elementEdited);
           }
-        }
-      } catch (e) { }
-    });
-  }
+          if (channelEditedMessages) {
+            const markupClassName = this[symbols.findModule]("markup")["markup"].split(" ")[0];
+            const markup = elem.querySelector("." + markupClassName);
+            while (markup.getElementsByClassName(markupClassName).length)
+              markup.getElementsByClassName(markupClassName)[0].remove();
+            if (channelEditedMessages[messageID]) {
+              markup.setAttribute(this[symbols.editedMessageAttribute], "");
+              const edited = this[symbols.editedMessages][this[symbols.getCurrentChannelID]()][messageID];
+              for (let i = 0; i < edited.length; i++) {
+                const elementEdited = this[symbols.showEdited](edited[i].message);
+
+                var timeElement = null;
+                for (let i = 0; i < elementEdited.children[0].children.length; i++) {
+                  if (elementEdited.children[0].children[i].tagName.toLowerCase() === 'time') {
+                    timeElement = elementEdited.children[0].children[i];
+                  }
+                }
+                var actualDate = new Date();
+                var messageEditDate = new Date(edited[i].dateTime);
+                var timeEdit = "";
+                if (actualDate.toLocaleDateString() == messageEditDate.toLocaleDateString()) {
+                  timeEdit += "Today at"
+                } else {
+                  timeEdit += messageEditDate.toLocaleDateString();
+                }
+                timeEdit += " " + messageEditDate.toLocaleTimeString();
+                new ZeresPluginLibrary.EmulatedTooltip(timeElement, timeEdit);
+
+                elementEdited.setAttribute(this[symbols.editedMessageAttribute], "");
+                markup.appendChild(elementEdited);
+              }
+            }
+          }
+        } catch (e) {}
+      });
+    }
 
   [symbols.showEdited](content) {
     const editText = document.createElement("div");
@@ -332,14 +325,14 @@ class NoDeleteMessages {
 
     renderFunc.render(
       createElementFunc.createElement("div", {
-        className: this[symbols.findModule]("markup")["markup"].split(" ")[0],
-        [this[symbols.editedMessageAttribute]]: true
-      },
+          className: this[symbols.findModule]("markup")["markup"].split(" ")[0],
+          [this[symbols.editedMessageAttribute]]: true
+        },
         parserForFunc.parse(content),
         createElementFunc.createElement("time", {
-          className: editedClassName + " da-edited",
-          role: "note"
-        },
+            className: editedClassName + " da-edited",
+            role: "note"
+          },
           parserForFunc.parse("(edited)")
         )
       ),
