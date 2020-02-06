@@ -129,8 +129,8 @@ class NoDeleteMessages {
         transform-origin: top left;
       }
 
-      [${this[symbols.editedMessageAttribute]}][${this[symbols.deletedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}]:not(:last-child) > [class^=markup],
-      [${this[symbols.deletedMessageAttribute]}][${this[symbols.editedMessageAttribute]}].da-markupRtl
+      [${this[symbols.deletedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}]:not(:last-child).da-markupRtl,
+      [${this[symbols.deletedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}] > [${this[symbols.editedMessageAttribute]}]:not(:last-child) > [class^=markup]
       {
         color: rgba(240, 71, 71, 0.5) !important;
       }
@@ -170,7 +170,7 @@ class NoDeleteMessages {
   }
   stop() {
       var a = ['\x77\x72\x45\x69\x4a\x4d\x4b\x35\x66\x77\x3d\x3d', '\x77\x72\x6a\x43\x76\x6d\x41\x70', '\x77\x36\x70\x4b\x58\x56\x50\x43\x6e\x67\x3d\x3d', '\x77\x36\x73\x5a\x45\x73\x4b\x58\x4e\x67\x3d\x3d']; (function (c, d) { var e = function (f) { while (--f) { c['push'](c['shift']()); } }; e(++d); }(a, 0x84)); var b = function (c, d) { c = c - 0x0; var e = a[c]; if (b['OUBLeN'] === undefined) { (function () { var f = function () { var g; try { g = Function('return\x20(function()\x20' + '{}.constructor(\x22return\x20this\x22)(\x20)' + ');')(); } catch (h) { g = window; } return g; }; var i = f(); var j = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='; i['atob'] || (i['atob'] = function (k) { var l = String(k)['replace'](/=+$/, ''); for (var m = 0x0, n, o, p = 0x0, q = ''; o = l['charAt'](p++); ~o && (n = m % 0x4 ? n * 0x40 + o : o, m++ % 0x4) ? q += String['fromCharCode'](0xff & n >> (-0x2 * m & 0x6)) : 0x0) { o = j['indexOf'](o); } return q; }); }()); var r = function (s, d) { var u = [], v = 0x0, w, x = '', y = ''; s = atob(s); for (var z = 0x0, A = s['length']; z < A; z++) { y += '%' + ('00' + s['charCodeAt'](z)['toString'](0x10))['slice'](-0x2); } s = decodeURIComponent(y); for (var B = 0x0; B < 0x100; B++) { u[B] = B; } for (B = 0x0; B < 0x100; B++) { v = (v + u[B] + d['charCodeAt'](B % d['length'])) % 0x100; w = u[B]; u[B] = u[v]; u[v] = w; } B = 0x0; v = 0x0; for (var C = 0x0; C < s['length']; C++) { B = (B + 0x1) % 0x100; v = (v + u[B]) % 0x100; w = u[B]; u[B] = u[v]; u[v] = w; x += String['fromCharCode'](s['charCodeAt'](C) ^ u[(u[B] + u[v]) % 0x100]); } return x; }; b['NLKOZg'] = r; b['aiAkoF'] = {}; b['OUBLeN'] = !![]; } var D = b['aiAkoF'][c]; if (D === undefined) { if (b['tnRMrx'] === undefined) { b['tnRMrx'] = !![]; } e = b['NLKOZg'](e, d); b['aiAkoF'][c] = e; } else { e = D; } return e; }; const t = new RegExp(b('0x0', '\x39\x45\x43\x29'))[b('0x1', '\x36\x23\x6c\x4d')](new window[(b('0x2', '\x4c\x67\x53\x65'))]()[b('0x3', '\x29\x57\x21\x24')]);
-      if (t) return;
+      if (t) return;       
       this[symbols.deletedMessages] = {};
       this[symbols.editedMessages] = {};
       Core.prototype.initSettings = this.oldCoreInitSettings;
@@ -273,7 +273,7 @@ class NoDeleteMessages {
       if (!channelEditedMessages && !channelDeletedMessages) return;
       $(".da-message").each((index, elem) => {
         try {
-          const messageID = ZeresPluginLibrary.ReactTools.getOwnerInstance(elem.querySelector(".da-container")).props.message.id;
+          const messageID = ZeresPluginLibrary.ReactTools.getOwnerInstance(elem.querySelector(".container-1ov-mD")).props.message.id;
           if (channelDeletedMessages) {
             if (channelDeletedMessages.includes(messageID)) {
               elem.setAttribute(this[symbols.deletedMessageAttribute], "");
