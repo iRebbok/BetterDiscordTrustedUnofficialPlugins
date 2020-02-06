@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-// Updated Feb 4th, 2020.
+// Updated Feb 5th, 2020.
 
 const symbols = {};
 
@@ -64,7 +64,7 @@ class NoDeleteMessages {
     return 'Prevents the client from removing deleted messages and print edited messages (until restart).\nUse .NoDeleteMessages-deleted-message .markup to edit the CSS of deleted messages (and .NoDeleteMessages-edited-message for edited messages) (Custom CSS ONLY, will not work in themes).\n\nMy Discord server: https://join-nebula.surge.sh\nCreate an issue at https://github.com/Mega-Mewthree/BetterDiscordPlugins for support.';
   }
   getVersion() {
-    return "0.2.18";
+    return "0.2.19";
   }
   getAuthor() {
     return "Mega_Mewthree (original), ShiiroSan (edit logging)";
@@ -269,7 +269,7 @@ class NoDeleteMessages {
       if (!channelEditedMessages && !channelDeletedMessages) return;
       $(".da-message").each((index, elem) => {
         try {
-          const messageID = ZeresPluginLibrary.ReactTools.getOwnerInstance(elem.querySelector(".da-container")).props.message.id;
+          const messageID = ZeresPluginLibrary.ReactTools.getOwnerInstance(elem.querySelector(".container-1ov-mD")).props.message.id;
           if (channelDeletedMessages) {
             if (channelDeletedMessages.includes(messageID)) {
               elem.setAttribute(this[symbols.deletedMessageAttribute], "");
