@@ -113,15 +113,20 @@ class NoDeleteMessages {
       that[symbols.replaceCustomCSS]();
     };
 
+    /*
+      Removed
+
+      [${this[symbols.deletedMessageAttribute]}]:not(:hover).mention, [${this[symbols.deletedMessageAttribute]}]:not(:hover) > [class ^= reactions], [${this[symbols.deletedMessageAttribute]}]:no(:hover) a, [${this[symbols.deletedMessageAttribute]}]:not(:hover) img {
+        filter: grayscale(100%) !important;
+      }
+    */
+
     BdApi.injectCSS(this[symbols.CSSID], `
       [${this[symbols.deletedMessageAttribute]}] .da-markup, [${this[symbols.deletedMessageAttribute]}] .da-markupRtl
       {
         color: #F00 !important;
       }
 
-      [${this[symbols.deletedMessageAttribute]}]:not(:hover).mention, [${this[symbols.deletedMessageAttribute]}]:not(:hover) > [class ^= reactions], [${this[symbols.deletedMessageAttribute]}]:not(:hover) a, [${this[symbols.deletedMessageAttribute]}]:not(:hover) img {
-        filter: grayscale(100%) !important;
-      }
 
       [${this[symbols.deletedMessageAttribute]}].mention, [${this[symbols.deletedMessageAttribute]}] > [class ^= reactions], [${this[symbols.deletedMessageAttribute]}] a, [${this[symbols.deletedMessageAttribute]}] img 
       {
